@@ -1,0 +1,65 @@
+
+
+import functools
+from PySide6.QtCore import QObject, Property as QProperty, Signal
+from PySide6.QtWidgets import QMessageBox
+import serial
+
+class Backend(QObject):
+
+    motors_connected = Signal(bool)
+
+
+    def __init__(self):
+        super().__init__()
+
+        self.ser:serial.Serial | None = None
+        self.motors = None
+
+
+    def connect_signals(self):
+        pass
+        
+    
+    @staticmethod
+    def motor_decorator(func):
+        """
+        Decorator for backend functions, to pop up a messagebox if the backend is not initialized.
+        This should be called on any function that requires a backend to be connected to work
+        """
+
+        @functools.wraps(func)
+        def backend_checker(*args, **kwargs):
+            self, *_ = args
+            if self.backend.motors is None:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setText("Motors are not Connected")
+                msg.setInformativeText(
+                    "Make sure the motors are connected before doing this"
+                )
+                msg.setWindowTitle("Motors Not Connected")
+                msg.exec()
+            else:
+                return func(*args, **kwargs)
+
+        return backend_checker
+
+
+    def connect_motors(self):
+        if self.motors is None:
+            print("Connecting to motors")
+            #actually connect motors here
+            try:
+                self.ser = serial.Serial(port="COM3", baudrate=9600, timeout=1)
+                self.motors_connected.emit(True)
+            except:
+                print("Could not connect to serial port")
+                self.motors_connected.emit(False)
+
+    
+    def disonnect_motors(self):
+        if self.motors is not None:
+            print("Disconnecting to motors")
+            #do some disconnecting
+            self.motors_connected.emit(False)

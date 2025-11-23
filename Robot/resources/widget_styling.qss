@@ -1,0 +1,17 @@
+/*Set General Font Styling */
+*{
+    font-family: IBMPlexSherif;
+    font-size: 16px
+}
+
+
+QWidget QTabWidget {
+    Background-color: #008332
+}
+
+QWidget QLabel {
+    color: white
+}
+QWidget QDoubleSpinBox {
+    Background: white;
+}

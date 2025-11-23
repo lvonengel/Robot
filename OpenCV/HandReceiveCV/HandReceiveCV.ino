@@ -17,9 +17,9 @@ void setup() {
   servomiddle.attach(4);
   servoindex.attach(5);
   servothumb.attach(6);
-  // servoWrist.attach(7)
+  // servoWrist.attach(7);
 
-    Serial.println("Hand tracking ready. Waiting for binary finger states")
+  Serial.println("Hand tracking ready. Waiting for binary finger states");
 }
 
 void loop() {
