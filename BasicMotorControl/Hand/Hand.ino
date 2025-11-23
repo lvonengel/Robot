@@ -5,6 +5,8 @@ Servo servoring;
 Servo servomiddle;
 Servo servoindex;
 Servo servothumb;
+Servo servowrist;
+
 
 void setup() { 
   Serial.begin(115200);
@@ -14,6 +16,7 @@ void setup() {
   servomiddle.attach(4);  // finger 3
   servoindex.attach(5);   // finger 4
   servothumb.attach(6);   // finger 5
+  servowrist.attach(7);   // wrist
 
   Serial.println("Commands ready. Example commands: 1r, 2m, 3mid.");
 }
@@ -29,8 +32,8 @@ void loop() {
     // parses just the finger
     char fingerChar = input.charAt(0);
 
-    if (fingerChar < '1' || fingerChar > '5') {
-      Serial.println("Invalid finger. Use 1–5.");
+    if (fingerChar < '0' || fingerChar > '5') {
+      Serial.println("Invalid finger. Use 0–5.");
       return;
     }
 
@@ -67,5 +70,6 @@ void moveFinger(int finger, int angle) {
     case 3: servomiddle.write(angle); break;
     case 4: servoindex.write(angle); break;
     case 5: servothumb.write(angle); break;
+    case 0: servowrist.write(angle); break;
   }
 }
