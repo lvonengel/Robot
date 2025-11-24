@@ -1,8 +1,11 @@
+# This must be imported here or app breaks
+import cv2
+import mediapipe
+
 import os
 import sys
 from PySide6.QtCore import QSize, QThread
 from PySide6.QtWidgets import QApplication, QMainWindow
-
 
 from Robot.backend.backend import Backend
 from Robot.frontend.main_window import MainWindow

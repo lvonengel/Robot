@@ -1,7 +1,6 @@
-
-
 import functools
-from PySide6.QtCore import QObject, Property as QProperty, Signal
+from Robot.backend.HandDetectorCV import HandDetectorCV
+from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QMessageBox
 import serial
 
@@ -15,6 +14,7 @@ class Backend(QObject):
 
         self.ser:serial.Serial | None = None
         self.motors = None
+        self.hand_detector:HandDetectorCV|None = None
 
 
     def connect_signals(self):
@@ -22,7 +22,7 @@ class Backend(QObject):
         
     
     @staticmethod
-    def motor_decorator(func):
+    def serial_decorator(func):
         """
         Decorator for backend functions, to pop up a messagebox if the backend is not initialized.
         This should be called on any function that requires a backend to be connected to work
@@ -31,7 +31,7 @@ class Backend(QObject):
         @functools.wraps(func)
         def backend_checker(*args, **kwargs):
             self, *_ = args
-            if self.backend.motors is None:
+            if self.backend.ser is None:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Icon.Warning)
                 msg.setText("Motors are not Connected")
@@ -46,9 +46,9 @@ class Backend(QObject):
         return backend_checker
 
 
-    def connect_motors(self):
+    def connect_serial(self):
         if self.motors is None:
-            print("Connecting to motors")
+            print("Connecting to Serial")
             #actually connect motors here
             try:
                 self.ser = serial.Serial(port="COM3", baudrate=9600, timeout=1)
@@ -57,9 +57,26 @@ class Backend(QObject):
                 print("Could not connect to serial port")
                 self.motors_connected.emit(False)
 
-    
-    def disonnect_motors(self):
+
+    def disconnect_serial(self):
         if self.motors is not None:
-            print("Disconnecting to motors")
+            print("Disconnecting Serial")
             #do some disconnecting
             self.motors_connected.emit(False)
+
+
+    def start_live(self, frame_callback, error_callback=None):
+        """
+        Starts live for hand detection using CV
+        """
+        if self.hand_detector is None:
+            self.hand_detector = HandDetectorCV(self)
+        self.hand_detector.start_live(frame_callback, error_callback)
+    
+
+    def end_live(self):
+        """
+        Stops live for hand detection using CV
+        """
+        self.hand_detector.end_live()
+        self.hand_detector = None

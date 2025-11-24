@@ -44,7 +44,7 @@ class MainWindow(QWidget):
 
 
     def connect_signals(self):
-        self.connect_motors_button.clicked.connect(self.backend.connect_motors)
+        self.connect_motors_button.clicked.connect(self.backend.connect_serial)
         self.backend.motors_connected.connect(self.set_background)
 
 
