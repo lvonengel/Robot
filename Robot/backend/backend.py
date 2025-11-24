@@ -34,11 +34,11 @@ class Backend(QObject):
             if self.backend.ser is None:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Icon.Warning)
-                msg.setText("Motors are not Connected")
+                msg.setText("Serial is not Connected")
                 msg.setInformativeText(
-                    "Make sure the motors are connected before doing this"
+                    "Make sure the serial is connected before doing this"
                 )
-                msg.setWindowTitle("Motors Not Connected")
+                msg.setWindowTitle("Serial Not Connected")
                 msg.exec()
             else:
                 return func(*args, **kwargs)

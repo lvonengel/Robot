@@ -15,3 +15,11 @@ QWidget QLabel {
 QWidget QDoubleSpinBox {
     Background: white;
 }
+
+QMessageBox {
+    background-color: white;
+}
+
+QMessageBox QLabel {
+    color: black;
+}
